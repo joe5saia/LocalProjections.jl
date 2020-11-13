@@ -3,6 +3,12 @@ uuid = "efdfa943-00bc-4a77-b5e5-4fa47d4501d1"
 authors = ["Joe Saia <joe5saia@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+FixedEffectModels = "9d5cd8c9-2029-5cab-9928-427838db53e3"
+Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
+ShiftedArrays = "1277b4bf-5013-50f5-be3d-901d8477a67a"
+
 [compat]
 julia = "1"
 
