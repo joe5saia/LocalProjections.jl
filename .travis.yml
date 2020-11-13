@@ -21,10 +21,11 @@ jobs:
     - arch: x86
       os: osx
   include:
-    - stage: Documentation
-      julia: 1
+    - stage: "Documentation"
+      julia: 1.4
+      os: linux
       script: |
-        julia --project=docs -e '
+        julia --project=docs/ -e '
           using Pkg
           Pkg.develop(PackageSpec(path=pwd()))
           Pkg.instantiate()

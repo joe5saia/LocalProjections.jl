@@ -18,5 +18,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/joe5saia/LocalProjections.jl",
+    repo="github.com/joe5saia/LocalProjections.jl.git",
 )
