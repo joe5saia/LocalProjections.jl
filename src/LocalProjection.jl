@@ -11,24 +11,6 @@
     ynames              ::Array{Symbol,1} = Array{Symbol,1}(undef, length(collect(horizons)))
 end
 
-# Make test Data
-# Generate x as a MA process 
-function make_test_data_levels(;T = 10_000, N = 2)
-    Random.seed!(123)
-    x = randn(1,N) .+ randn(2T,N) * randn(N,N)
-    β = reshape(collect(1:N*10), 10, N)
-   
-    y = zeros(Float64,2T)
-    y[1:10] = 0.5 .+ randn(10)
-    for i in 11:length(y), l in 0:9
-        y[i] += β[l+1, :]' * x[i-l, :] + 100*randn()
-    end
-
-    df = DataFrame(x[end-T:end,:])
-    df[:, :y] = y[end-T:end]
-    return df, β
-end
-
 
 
 #######################################################################
@@ -53,7 +35,7 @@ end
 
 function coef(lp::LocalProjection, xname::Symbol)
     idx = findfirst(Symbol.(coefnames(lp.models[1])) .== xname)
-    β = [coef(m)[idx] for m in lp.models]
+    β = [m.coef[idx] for m in lp.models]
     return β
 end
 
