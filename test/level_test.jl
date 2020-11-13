@@ -1,4 +1,7 @@
-using DataFrames, Random, LinearAlgebra, FixedEffectModels
+using DataFrames
+using Random
+using LinearAlgebra
+using FixedEffectModels
 
 Random.seed!(123)
 N = 2
