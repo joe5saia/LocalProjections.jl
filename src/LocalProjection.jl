@@ -1,5 +1,15 @@
 
-
+"""
+Struct with the following fields
+- df             
+- horizons       
+- models         
+- transformfunc  
+- grwthoffset    
+- formula        
+- regstyle       
+- ynames         
+"""
 @with_kw struct LocalProjection
     df                  ::DataFrame
     horizons            ::Array{Int,1} = [1]
