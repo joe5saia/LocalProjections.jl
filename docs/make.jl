@@ -19,4 +19,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/joe5saia/LocalProjections.jl.git",
+    devbranch = "main"
 )
