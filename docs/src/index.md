@@ -4,6 +4,9 @@ CurrentModule = LocalProjections
 
 # LocalProjections
 
+```@contents
+```
+
 ```@index
 ```
 

@@ -26,6 +26,13 @@ end
 #######################################################################
 # LocalProjection functions
 #######################################################################
+"""
+    makedepvars(lp::LocalProjection)
+Takes the lhs variable from `lp.formula` and makes the cumlative growth  variables 
+for each horizon specified by `horizons` for the y-variable. This updates the 
+dataframe stored in `lp`. Also updates the `ynames` array with the name of the 
+created variables
+"""
 function makedepvars(lp::LocalProjection)
     if lp.regstyle == :rates
         FΔ!(lp.df, Symbol(lp.formula.lhs), lp.horizons, getfield(Main, lp.transformfunc), lp.grwthoffset)
@@ -36,6 +43,12 @@ function makedepvars(lp::LocalProjection)
     end
 end
 
+"""
+    runregs(lp::LocalProjection)
+Estimates the regression for each horizon using `FixedEffectModels.reg(lp.df, Term(lp.ynames[index]) ~ lp.formula.rhs)`
+and store the estimated models in `lp.models`. The estimations are done lazely, i.e. each regression starts 
+from scratch without saving intermediate computations common across each regression
+"""
 function runregs(lp::LocalProjection)
     for (index, value) in enumerate(lp.horizons)
         form = Term(lp.ynames[index]) ~ lp.formula.rhs
@@ -43,18 +56,35 @@ function runregs(lp::LocalProjection)
     end
 end
 
+"""
+    coef(lp::LocalProjection, xname::Symbol)
+Returns a vector of coefficients for the variable `xname` for each regression. `coef(lp, xname)[i] ` 
+corresponds to the coefficient for the horizon `lp.horizons[i]`.
+"""
 function coef(lp::LocalProjection, xname::Symbol)
     idx = findfirst(Symbol.(coefnames(lp.models[1])) .== xname)
     β = [m.coef[idx] for m in lp.models]
     return β
 end
 
+"""
+    se(lp::LocalProjection, xname::Symbol)
+Returns a vector of standard errors for each coefficient for the variable `xname` for each regression. 
+`se(lp, xname)[i] ` corresponds to the se for the horizon `lp.horizons[i]`.
+"""
 function se(lp::LocalProjection, xname::Symbol)
     idx = findfirst(Symbol.(coefnames(lp.models[1])) .== xname)
     se = [sqrt(vcov(m)[idx, idx]) for m in lp.models]
     return se
 end
 
+"""
+    coef_se(lp::LocalProjection, xname::Symbol)
+Returns a dataframe with the columns `[horizons, β, se]` aligning the 
+estimated coefficient, standard error and horizon that these correspond to. 
+Constructed from
+`DataFrame(horizons = lp.horizons, β = coef(lp, xname), se = se(lp, xname))`
+"""
 function coef_se(lp::LocalProjection, xname::Symbol)
     return DataFrame(horizons = lp.horizons, β = coef(lp, xname), se = se(lp, xname))
 end
